@@ -29,6 +29,9 @@ jobs:
 
       - name: Pull docker.io/library/nginx:1.21.6
         run: docker pull docker.io/library/nginx:1.21.6
+      
+      - name: Generate trivy vuln report for nginx image
+        run: trivy image --vuln-type os --ignore-unfixed -f json -o ${{ github.workspace }}/test/data/nginx.1.21.6.json docker.io/library/nginx:1.21.6
 
       - name: Install Copa
         run: |
