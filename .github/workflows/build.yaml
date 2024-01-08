@@ -32,8 +32,9 @@ jobs:
       
       - name: Generate trivy vuln report for nginx image
         run: |
-          cd ${{ github.workspace }}/test/data
-          trivy image --vuln-type os --ignore-unfixed -f json -o nginx.1.21.6.json docker.io/library/nginx:1.21.6
+          cd ${{ github.workspace }}/test
+          mkdir data
+          trivy image --vuln-type os --ignore-unfixed -f json -o data/nginx.1.21.6.json docker.io/library/nginx:1.21.6
 
       - name: Install Copa
         run: |
