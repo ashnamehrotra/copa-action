@@ -51,4 +51,4 @@ jobs:
             --name=copa-action \
             copa-action 'docker.io/library/nginx:1.21.6' 'nginx.1.21.6.json' '1.21.6-patched'
           docker images
-          bats --print-output-on-failure ./test.bats
+          bats --print-output-on-failure ./test/test.bats
