@@ -26,7 +26,7 @@ jobs:
 
           - name: Generate and Push Tags
             run: |
-              version=${{ github.event.inputs.tag }}
+              version=${{ github.event.inputs.release_version }}
               major=$(echo $version | cut -d. -f1)
               minor=$(echo $version | cut -d. -f1-2)
               patch=$(echo $version | cut -d. -f1-3 | cut -d. -f3)
@@ -37,6 +37,8 @@ jobs:
 
               git tag $version
               git tag $minor
+
+              // only do this if full version is the latest full version
               git tag $major -f
 
               git push --set-upstream origin --tags
