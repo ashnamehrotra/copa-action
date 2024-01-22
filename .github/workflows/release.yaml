@@ -36,7 +36,7 @@ jobs:
               echo "Patch version: $patch"
 
               git tag $version
-              git tag $minor
+              git tag $minor -f
 
               git tag $major -f
 
