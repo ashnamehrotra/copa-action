@@ -40,7 +40,7 @@ jobs:
 
               git tag $major -f
 
-              git push --set-upstream origin --tags
+              git push --set-upstream origin --tags -f
               
           - name: Create GitHub release
             env:
