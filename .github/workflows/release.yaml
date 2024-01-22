@@ -38,7 +38,6 @@ jobs:
               git tag $version
               git tag $minor
 
-              // only do this if full version is the latest full version
               git tag $major -f
 
               git push --set-upstream origin --tags
