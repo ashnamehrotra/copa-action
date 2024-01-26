@@ -24,22 +24,23 @@ jobs:
               git config user.name 'github-actions[bot]'
               git config user.email 'github-actions[bot]@users.noreply.github.com'
 
+          - name: Get Latest Release
+            run: |
+              LATEST=$(curl -s "https://api.github.com/repos/project-copacetic/copa-action/releases/latest" | jq -r .tag_name)
+              echo "Latest release version: $LATEST"
+
           - name: Generate and Push Tags
             run: |
               version=${{ github.event.inputs.release_version }}
               major=$(echo $version | cut -d. -f1)
               minor=$(echo $version | cut -d. -f1-2)
-              patch=$(echo $version | cut -d. -f1-3 | cut -d. -f3)
-              
-              echo "Major version: $major"
-              echo "Minor version: $minor"
-              echo "Patch version: $patch"
 
               git tag $version
               git tag $minor -f
 
-              git tag $major -f
+              // if latest minor version # is greater than curr versions minor version number, dont update major version
 
+              git tag $major -f
               git push --set-upstream origin --tags -f
               
           - name: Create GitHub release
