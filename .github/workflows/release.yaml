@@ -38,9 +38,15 @@ jobs:
               git tag $version
               git tag $minor -f
 
-              // if latest minor version # is greater than curr versions minor version number, dont update major version
+              latest_minor=$(echo $LATEST | cut -d. -f2)
+              current_minor=$(echo $version | cut -d. -f2)
 
-              git tag $major -f
+              if [ "$latest_minor" -gt "$current_minor" ]; then
+                echo "Release $version is not latest minor version. Not updating major version."
+              else
+                git tag $major -f
+              fi
+
               git push --set-upstream origin --tags -f
               
           - name: Create GitHub release
