@@ -40,7 +40,7 @@ runs:
           buildkitd_container=true
         else
           docker buildx create --name action
-          buildkitd_container=false
+          buildkitd_container=''
         fi
     - name: docker run copa-action
       id: copa-action
