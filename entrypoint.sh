@@ -6,6 +6,7 @@ patched_tag=$3
 timeout=$4
 output_file=$5
 format=$6
+buildkitd_container=$7
 
 
 # parse image into image name
@@ -19,8 +20,16 @@ else
     output="--format $format --output ./data/"$output_file""
 fi
 
+# check if buildkitd container is running
+if [ -z "$buildkitd_container" ]
+then
+    buildkitd="--addr buildx://action"
+else
+    buildkitd="--addr tcp://127.0.0.1:8888"
+fi
+
 # run copa to patch image
-if copa patch -i "$image" -r ./data/"$report" -t "$patched_tag" --addr tcp://127.0.0.1:8888 --timeout $timeout $output;
+if copa patch -i "$image" -r ./data/"$report" -t "$patched_tag" $buildkitd --timeout $timeout $output;
 then
     patched_image="$image_no_tag:$patched_tag"
     echo "patched-image=$patched_image" >> "$GITHUB_OUTPUT"
