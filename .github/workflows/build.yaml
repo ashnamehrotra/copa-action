@@ -57,6 +57,7 @@ jobs:
 
       - name: Bats Test
         run: |
+          docker info
           docker build --build-arg copa_version=${COPA_VERSION} -t copa-action .
           docker run --net=host \
             --mount=type=bind,source=/tmp,target=/data \
