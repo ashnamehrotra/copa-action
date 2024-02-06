@@ -52,6 +52,9 @@ jobs:
               }
             }
 
+      - name: Print Docker Daemon Config
+        run: docker info
+
       - name: Bats Test
         run: |
           docker build --build-arg copa_version=${COPA_VERSION} -t copa-action .
