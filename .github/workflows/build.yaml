@@ -55,7 +55,7 @@ jobs:
       
       - name: Get Socket Path
         run: |
-          socket_path=docker context inspect | jq -r .[0].Endpoints.docker.Host
+          socket_path=$(docker context inspect | jq -r .[0].Endpoints.docker.Host)
           echo $socket_path
 
       - name: Print Docker Daemon Config
