@@ -53,18 +53,11 @@ jobs:
               }
             }
       
-      - name: Get Socket Path
-        run: |
-          socket_path=$(docker context inspect | jq -r .[0].Endpoints.docker.Host)
-          echo $socket_path
-
-      - name: Print Docker Daemon Config
-        run: docker info
-
       - name: Bats Test
         run: |
-          docker info
-          socket_path=$(docker context inspect | jq -r .[0].Endpoints.docker.Host)
+          url=$(docker context inspect | jq -r .[0].Endpoints.docker.Host)
+          socket_path=$(echo "$url" | awk -F// '{print $2}')
+
           docker build --build-arg copa_version=${COPA_VERSION} -t copa-action .
           docker run --net=host \
             --mount=type=bind,source=/tmp,target=/data \
