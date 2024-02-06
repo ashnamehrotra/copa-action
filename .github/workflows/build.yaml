@@ -41,12 +41,12 @@ jobs:
             tar -zxvf copa.tar.gz
             cp copa /usr/local/bin/
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1 
+
       - name: Bats Test
         run: |
-          docker buildx create --name action
-          docker buildx use action
-          docker buildx inspect
-          docker buildx build --build-arg copa_version=${COPA_VERSION} -t copa-action .
+          docker buildx build --output type=image --build-arg copa_version=${COPA_VERSION} -t copa-action .
           docker run --net=host \
             --mount=type=bind,source=/tmp,target=/data \
             --mount=type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock \
