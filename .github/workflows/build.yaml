@@ -45,7 +45,8 @@ jobs:
         run: |
           docker buildx create --name action
           docker buildx use action
-          docker build --build-arg copa_version=${COPA_VERSION} -t copa-action .
+          docker buildx inspect
+          docker buildx build --build-arg copa_version=${COPA_VERSION} -t copa-action .
           docker run --net=host \
             --mount=type=bind,source=/tmp,target=/data \
             --mount=type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock \
