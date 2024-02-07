@@ -29,7 +29,7 @@ else
 fi
 
 # run copa to patch image
-if copa patch -i "$image" -r ./data/"$report" -t "$patched_tag" $buildkitd --timeout $timeout $output;
+if copa patch -i "$image" -r ./data/"$report" -t "$patched_tag" $buildkitd --timeout $timeout $output --debug;
 then
     patched_image="$image_no_tag:$patched_tag"
     echo "patched-image=$patched_image" >> "$GITHUB_OUTPUT"
