@@ -43,6 +43,11 @@ jobs:
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
+
+      - name: Debugging
+        run : |
+          docker ps -a
+          docker buildx ls
         
       - name: Bats Test
         run: |
