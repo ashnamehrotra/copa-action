@@ -53,6 +53,7 @@ runs:
 
     - name: Get socket path
       if: ${{ !inputs.buildkitd }}
+      shell: bash
       run: |
         url=$(docker context inspect | jq -r .[0].Endpoints.docker.Host)
         socket_path=$(echo "$url" | awk -F// '{print $2}')
