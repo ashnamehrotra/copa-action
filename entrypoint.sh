@@ -20,16 +20,13 @@ else
     output="--format $format --output ./data/"$output_file""
 fi
 
-# check if buildkitd container is running
+# check if buildkitd container is set
 if [ -z "$buildkitd_container" ]
 then
-    buildkitd="--addr buildx://action"
+    buildkitd=""
 else
     buildkitd="--addr tcp://127.0.0.1:8888"
 fi
-
-# just for testing
-buildkitd=""
 
 # run copa to patch image
 if copa patch -i "$image" -r ./data/"$report" -t "$patched_tag" $buildkitd --timeout $timeout $output;
