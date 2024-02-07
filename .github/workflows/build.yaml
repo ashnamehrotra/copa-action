@@ -19,17 +19,17 @@ jobs:
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
 
       - name: Set up Docker if buildkitd not provided
-          uses: crazy-max/ghaction-setup-docker@v3
-          if: ${{ !inputs.buildkitd }}
-          with:
-            daemon-config: |
-              {
-                "debug": true,
-                "experimental": true,
-                  "features": {
-                    "containerd-snapshotter": true
-                  }
-              }
+        uses: crazy-max/ghaction-setup-docker@v3
+        if: ${{ !inputs.buildkitd }}
+        with:
+          daemon-config: |
+            {
+              "debug": true,
+              "experimental": true,
+                "features": {
+                  "containerd-snapshotter": true
+                }
+            }
 
       - name: Get socket path
         run: |
