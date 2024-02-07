@@ -32,7 +32,7 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - name: docker run buildkitd if provided
+    - name: Docker run buildkitd if version provided
       shell: bash
       if: ${{ inputs.buildkitd }}
       run: |
@@ -52,13 +52,14 @@ runs:
           }
 
     - name: Get socket path
+      if: ${{ !inputs.buildkitd }}
       run: |
         url=$(docker context inspect | jq -r .[0].Endpoints.docker.Host)
         socket_path=$(echo "$url" | awk -F// '{print $2}')
         echo "$socket_path"
         echo "SOCKET=$socket_path" >> $GITHUB_ENV
 
-    - name: docker run copa-action
+    - name: Docker run copa-action
       id: copa-action
       shell: bash
       run : |
@@ -70,7 +71,7 @@ runs:
         fi
 
         if [ -z "${{ inputs.buildkit-version }}" ]; then
-          docker run --net=host --mount=type=bind,source=$(pwd),target=/data --mount=type=bind,source=$SOCKET,target="/var/run/docker.sock" --mount=type=bind,source=$GITHUB_OUTPUT,target=$GITHUB_OUTPUT -e GITHUB_OUTPUT --name=copa-action "ghcr.io/project-copacetic/copa-action:v$version" ${{ inputs.image }} ${{ inputs.image-report }} ${{ inputs.patched-tag }} ${{ inputs.timeout }} ${{ inputs.output }} ${{ inputs.format }} ${{ inputs.buildkit-version }}
+          docker run --net=host --mount=type=bind,source=$(pwd),target=/data --mount=type=bind,source=$SOCKET,target="/var/run/docker.sock" --mount=type=bind,source=$GITHUB_OUTPUT,target=$GITHUB_OUTPUT -e GITHUB_OUTPUT --name=copa-action "ghcr.io/project-copacetic/copa-action:v$version" ${{ inputs.image }} ${{ inputs.image-report }} ${{ inputs.patched-tag }} ${{ inputs.timeout }} ${{ inputs.output }} ${{ inputs.format }}
         else
           docker run --net=host --mount=type=bind,source=$(pwd),target=/data --mount=type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock --mount=type=bind,source=$GITHUB_OUTPUT,target=$GITHUB_OUTPUT -e GITHUB_OUTPUT --name=copa-action "ghcr.io/project-copacetic/copa-action:v$version" ${{ inputs.image }} ${{ inputs.image-report }} ${{ inputs.patched-tag }} ${{ inputs.timeout }} ${{ inputs.output }} ${{ inputs.format }} ${{ inputs.buildkit-version }}
         fi
