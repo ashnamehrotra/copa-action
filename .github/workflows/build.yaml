@@ -40,32 +40,13 @@ jobs:
             curl --retry 5 -fsSL -o copa.tar.gz https://github.com/project-copacetic/copacetic/releases/download/v${COPA_VERSION}/copa_${COPA_VERSION}_linux_amd64.tar.gz
             tar -zxvf copa.tar.gz
             cp copa /usr/local/bin/
-
-      - name: Set up Docker
-        uses: crazy-max/ghaction-setup-docker@v3
-        with:
-          daemon-config: |
-            {
-              "debug": true,
-              "experimental": true,
-              "features": {
-                "containerd-snapshotter": true
-              }
-            }
-
-      - name: Get socket path
-        run: |
-          url=$(docker context inspect | jq -r .[0].Endpoints.docker.Host)
-          socket_path=$(echo "$url" | awk -F// '{print $2}')
-          echo "$socket_path"
-          echo "SOCKET=$socket_path" >> $GITHUB_ENV
       
       - name: Bats Test
         run: |
           docker build --build-arg copa_version=${COPA_VERSION} -t copa-action .
           docker run --net=host \
             --mount=type=bind,source=/tmp,target=/data \
-            --mount=type=bind,source=$SOCKET,target="/var/run/docker.sock" \
+            --mount=type=bind,source="/var/run/docker.sock",target="/var/run/docker.sock" \
             --mount=type=bind,source=$GITHUB_OUTPUT,target=$GITHUB_OUTPUT -e GITHUB_OUTPUT \
             --name=copa-action \
             copa-action 'docker.io/library/nginx:1.21.6' 'nginx.1.21.6.json' '1.21.6-patched' '10m' 'output.json' 'openvex'
