@@ -1,4 +1,6 @@
-#!/bin/sh
+#!/bin/sh 
+
+set -ex;
 
 image=$1
 report=$2
