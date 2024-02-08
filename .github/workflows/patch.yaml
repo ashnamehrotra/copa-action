@@ -57,6 +57,7 @@ jobs:
           image-report: "report.json"
           patched-tag: "patched"
           copa-version: "0.3.0"
+          buildkit-version: "0.12.5"
 
 
 # test also w older copa version and buildkitd address and no output
