@@ -25,6 +25,8 @@ fi
 # check if buildkitd container is set
 if [ -z "$buildkitd_container" ]
 then
+    docker buildx create --name=copa-action
+    docker buildx use --default copa-action
     buildkitd="--addr buildx://copa-action"
 else
     buildkitd="--addr tcp://127.0.0.1:8888"

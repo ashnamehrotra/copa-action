@@ -40,26 +40,6 @@ jobs:
             curl --retry 5 -fsSL -o copa.tar.gz https://github.com/project-copacetic/copacetic/releases/download/v${COPA_VERSION}/copa_${COPA_VERSION}_linux_amd64.tar.gz
             tar -zxvf copa.tar.gz
             cp copa /usr/local/bin/
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Create copa-action buildx instance
-        run: |
-          docker buildx create --name copa-action
-          docker buildx use --default copa-action
-
-      - name: Debug
-        run: |
-          docker buildx ls
-          echo "version"
-          docker version
-          echo "context"
-          docker context ls
-      
-      - name: Inspect
-        run : |
-          docker context inspect | jq
         
       - name: Bats Test
         run: |
