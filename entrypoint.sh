@@ -8,7 +8,7 @@ patched_tag=$3
 timeout=$4
 output_file=$5
 format=$6
-connection-format=$7
+connection_format=$7
 
 
 # parse image into image name
@@ -24,10 +24,10 @@ fi
 
 # check selected method of connection
 # through a running buildkit container
-if [connection-format == "buildkit-container"]; then
+if [connection_format == "buildkit-container"]; then
      connection="--addr tcp://127.0.0.1:8888"
-# via buildx instance (default method - allows for patching private images)
-elif [connection-format == "buildx"]; then
+# through a buildx instance (default method - allows for patching private images)
+elif [connection_format == "buildx"]; then
     docker buildx create --name=copa-action
     docker buildx use --default copa-action
     connection="--addr buildx://copa-action"
@@ -46,4 +46,3 @@ else
     echo "Error patching image $image with copa"
     exit 1
 fi
-
