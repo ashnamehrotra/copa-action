@@ -23,19 +23,22 @@ else
 fi
 
 # check selected method of connection
-# through a running buildkit container
-if [connection_format == "buildkit-container"]; then
-     connection="--addr tcp://127.0.0.1:8888"
-# through a buildx instance (default method - allows for patching private images)
-elif [connection_format == "buildx"]; then
-    docker buildx create --name=copa-action
-    docker buildx use --default copa-action
-    connection="--addr buildx://copa-action"
-# through a custom socket enabling containerd img store (allows for patching local and private images)
-else
-    connection=""
-fi
-
+case "$connection_format" in
+    # through a buildx instance (allows for patching private images)
+    "buildx")
+        docker buildx create --name=copa-action
+        docker buildx use --default copa-action
+        connection="--addr buildx://copa-action"
+        ;;
+    # through a running buildkit container
+    "buildkit-container")
+        connection="--addr tcp://127.0.0.1:8888"
+        ;;
+    # none specified = through default docker buildkit endpoint (allows for patching local and private images)
+    *)
+        connection=""
+        ;;
+esac
 
 # run copa to patch image
 if copa patch -i "$image" -r ./data/"$report" -t "$patched_tag" $connection --timeout $timeout $output;
