@@ -49,6 +49,8 @@ jobs:
       - name: Debug
         run: |
           docker buildx ls
+          echo "version"
+          docker version
         
       - name: Bats Test
         run: |

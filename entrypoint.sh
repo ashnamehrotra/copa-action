@@ -32,6 +32,7 @@ fi
 
 # debugging
 echo "final command: copa patch -i $image -r ./data/"$report" -t $patched_tag $buildkitd --timeout $timeout $output"
+docker version
 docker buildx ls
 
 # run copa to patch image
