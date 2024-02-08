@@ -35,7 +35,7 @@ runs:
   steps:
     - name: Docker run buildkitd if version provided
       shell: bash
-      if: ${{ inputs.buildkitd }}
+      if: ${{ inputs.buildkitd != ''}}
       run: |
         echo "HERE"
         docker run --net=host --detach --rm --privileged -p 127.0.0.1:8888:8888 --name buildkitd --entrypoint buildkitd moby/buildkit:${{ inputs.buildkit-version }} --addr tcp://0.0.0.0:8888
