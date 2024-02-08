@@ -54,11 +54,9 @@ runs:
         # check for buildkit version input for connection through a buildkit container
         elif [ -m "${{ inputs.buildkit-version }}" ]; then
           docker run --net=host --detach --rm --privileged -p 127.0.0.1:8888:8888 --name buildkitd --entrypoint buildkitd moby/buildkit:${{ inputs.buildkit-version }} --addr tcp://0.0.0.0:8888
-          docker run --net=host --mount=type=bind,source=$(pwd),target=/data --mount=type=bind,source="/var/run/docker.sock",target="/var/run/docker.sock" --mount=type=bind,source=$GITHUB_OUTPUT,target=$GITHUB_OUTPUT -e GITHUB_OUTPUT --name=copa-action "ashnam/copa-action:test" ${{ inputs.image }} ${{ inputs.image-report }} ${{ inputs.patched-tag }} ${{ inputs.timeout }} ${{ inputs.output }} ${{ inputs.format }} "--addr tcp://127.0.0.1:8888"
+          docker run --net=host --mount=type=bind,source=$(pwd),target=/data --mount=type=bind,source="/var/run/docker.sock",target="/var/run/docker.sock" --mount=type=bind,source=$GITHUB_OUTPUT,target=$GITHUB_OUTPUT -e GITHUB_OUTPUT --name=copa-action "ashnam/copa-action:test" ${{ inputs.image }} ${{ inputs.image-report }} ${{ inputs.patched-tag }} ${{ inputs.timeout }} ${{ inputs.output }} ${{ inputs.format }} "buildkit-container"
         
         # default is to set up and connect copa via buildx instance
         else 
-          docker buildx create --name=copa-action
-          docker buildx use --default copa-action
-          docker run --net=host --mount=type=bind,source=$(pwd),target=/data --mount=type=bind,source="/var/run/docker.sock",target="/var/run/docker.sock" --mount=type=bind,source=$GITHUB_OUTPUT,target=$GITHUB_OUTPUT -e GITHUB_OUTPUT --name=copa-action "ashnam/copa-action:test" ${{ inputs.image }} ${{ inputs.image-report }} ${{ inputs.patched-tag }} ${{ inputs.timeout }} ${{ inputs.output }} ${{ inputs.format }} "--addr buildx://copa-action"
+          docker run --net=host --mount=type=bind,source=$(pwd),target=/data --mount=type=bind,source="/var/run/docker.sock",target="/var/run/docker.sock" --mount=type=bind,source=$GITHUB_OUTPUT,target=$GITHUB_OUTPUT -e GITHUB_OUTPUT --name=copa-action "ashnam/copa-action:test" ${{ inputs.image }} ${{ inputs.image-report }} ${{ inputs.patched-tag }} ${{ inputs.timeout }} ${{ inputs.output }} ${{ inputs.format }} "buildx"
         fi
