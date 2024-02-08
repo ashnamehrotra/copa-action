@@ -25,8 +25,6 @@ inputs:
   format:
     description: "Output format"
     default: "openvex"
-  custom-socket-path:
-    description: "Custom docker socket path to mount"
 outputs:
   patched-image:
     description: 'Image reference of patched image'
