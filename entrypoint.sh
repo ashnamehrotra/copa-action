@@ -28,8 +28,14 @@ else
     buildkitd="--addr tcp://127.0.0.1:8888"
 fi
 
+# debugging
+echo "final command: copa patch -i $image -r ./data/"$report" -t $patched_tag $buildkitd --timeout $timeout $output"
+copa_output=$(copa patch -i "$image" -r ./data/"$report" -t "$patched_tag" $buildkitd --timeout $timeout $output;)
+echo "COPA OUTPUT"
+echo "$copa_output
+
 # run copa to patch image
-if copa patch -i "$image" -r ./data/"$report" -t "$patched_tag" $buildkitd --timeout $timeout $output --debug;
+if copa patch -i "$image" -r ./data/"$report" -t "$patched_tag" $buildkitd --timeout $timeout $output;
 then
     patched_image="$image_no_tag:$patched_tag"
     echo "patched-image=$patched_image" >> "$GITHUB_OUTPUT"
