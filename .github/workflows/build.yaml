@@ -48,6 +48,10 @@ jobs:
         run : |
           docker ps -a
           docker buildx ls
+      
+      - name: Debugging 2
+        run : | 
+          docker context ls
         
       - name: Bats Test
         run: |
