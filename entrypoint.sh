@@ -32,9 +32,8 @@ fi
 
 # debugging
 echo "final command: copa patch -i $image -r ./data/"$report" -t $patched_tag $buildkitd --timeout $timeout $output"
-copa_output=$(copa patch -i "$image" -r ./data/"$report" -t "$patched_tag" $buildkitd --timeout $timeout $output;)
-echo "COPA OUTPUT"
-echo "$copa_output"
+copa patch -i "$image" -r ./data/"$report" -t "$patched_tag" $buildkitd --timeout $timeout $output
+exit 1;
 
 # run copa to patch image
 if copa patch -i "$image" -r ./data/"$report" -t "$patched_tag" $buildkitd --timeout $timeout $output;
