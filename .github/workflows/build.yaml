@@ -51,6 +51,8 @@ jobs:
           docker buildx ls
           echo "version"
           docker version
+          echo "context"
+          docker context ls
         
       - name: Bats Test
         run: |
