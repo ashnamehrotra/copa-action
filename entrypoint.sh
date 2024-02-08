@@ -25,7 +25,7 @@ fi
 # check if buildkitd container is set
 if [ -z "$buildkitd_container" ]
 then
-    buildkitd="buildx://"
+    buildkitd="--addr buildx://"
 else
     buildkitd="--addr tcp://127.0.0.1:8888"
 fi
