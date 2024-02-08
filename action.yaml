@@ -78,5 +78,7 @@ runs:
 
 # part 2
 # if input runtime socket, sub that in
+# will this even work tho? bc docker buildx one didnt work unless I did it in the container itself
+
 # add docs for containerd socket enabling and passing that in
 # also add docs that version support is not aligned with copa release versions
