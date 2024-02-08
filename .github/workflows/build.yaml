@@ -44,6 +44,11 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      - name: Create copa-action buildx instance
+        run: |
+          docker buildx create --name copa-action
+          docker buildx use --default copa-action
+
       - name: Debug
         run: |
           docker buildx ls
