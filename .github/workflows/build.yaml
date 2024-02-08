@@ -56,6 +56,10 @@ jobs:
           docker version
           echo "context"
           docker context ls
+      
+      - name: Inspect
+        run : |
+          docker context inspect | jq
         
       - name: Bats Test
         run: |
