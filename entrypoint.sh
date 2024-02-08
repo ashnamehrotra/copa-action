@@ -28,6 +28,8 @@ then
     docker buildx create --name=copa-action
     docker buildx use --default copa-action
     buildkitd="--addr buildx://copa-action"
+    # JUST FOR TESTING
+    buildkitd=''
 else
     buildkitd="--addr tcp://127.0.0.1:8888"
 fi
