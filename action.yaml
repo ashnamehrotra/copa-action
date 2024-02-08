@@ -42,7 +42,7 @@ runs:
 
     - name: Set up Docker Buildx
       if: ${{ !inputs.buildkitd }}
-      uses: docker/setup-buildx-action@v3
+      uses: docker/setup-buildx-action@v3 # pin this
 
     - name: Docker run copa-action
       id: copa-action
@@ -60,3 +60,10 @@ runs:
         else
           docker run --net=host --mount=type=bind,source=$(pwd),target=/data --mount=type=bind,source="/var/run/docker.sock",target="/var/run/docker.sock" --mount=type=bind,source=$GITHUB_OUTPUT,target=$GITHUB_OUTPUT -e GITHUB_OUTPUT --name=copa-action "ashnam/copa-action:test" ${{ inputs.image }} ${{ inputs.image-report }} ${{ inputs.patched-tag }} ${{ inputs.timeout }} ${{ inputs.output }} ${{ inputs.format }} ${{ inputs.buildkit-version }}
         fi
+
+
+# if no input, use buildx as normal
+# if input buildkit version, use buildkitd
+# if input runtime socket, sub that in
+# add docs for containerd socket enabling and passing that in
+# also add docs that version support is not aligned with copa release versions
