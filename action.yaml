@@ -22,6 +22,7 @@ inputs:
     description: "Copa version to use"
   output:
     description: "Output filename"
+    default: "output.json"
   format:
     description: "Output format"
     default: "openvex"
