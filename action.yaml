@@ -39,10 +39,12 @@ runs:
       if: ${{ inputs.buildkitd }}
       run: |
         docker run --net=host --detach --rm --privileged -p 127.0.0.1:8888:8888 --name buildkitd --entrypoint buildkitd moby/buildkit:${{ inputs.buildkit-version }} --addr tcp://0.0.0.0:8888
-
-    - name: Set up Docker Buildx
+  
+    - name: If buildkit not provided, set up Buildx
       if: ${{ !inputs.buildkitd }}
-      uses: docker/setup-buildx-action@v3 # pin this
+      run: |
+        docker buildx create --name copa-action
+        docker buildx use --default copa-action
 
     - name: Docker run copa-action
       id: copa-action
@@ -62,8 +64,11 @@ runs:
         fi
 
 
+# part 1
 # if no input, use buildx as normal
 # if input buildkit version, use buildkitd
+
+# part 2
 # if input runtime socket, sub that in
 # add docs for containerd socket enabling and passing that in
 # also add docs that version support is not aligned with copa release versions

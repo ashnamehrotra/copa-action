@@ -43,17 +43,8 @@ jobs:
       
       - name: Try Docker buildx use
         run : |
-          echo "creating buildx instance"
           docker buildx create --name copa-action
-          echo "using buildx instance"
           docker buildx use --default copa-action
-
-      - name: Debugging
-        run : |
-          echo "docker ps -a"
-          docker ps -a
-          echo "docker buildx ls"
-          docker buildx ls
         
       - name: Bats Test
         run: |
