@@ -47,6 +47,7 @@ jobs:
           docker buildx create --name copa-action
           echo "using buildx instance"
           docker buildx use --builder copa-action
+          docker buildx use --default
 
       - name: Debugging
         run : |
@@ -54,10 +55,6 @@ jobs:
           docker ps -a
           echo "docker buildx ls"
           docker buildx ls
-      
-      - name: Debugging 2
-        run : | 
-          docker context ls
         
       - name: Bats Test
         run: |
