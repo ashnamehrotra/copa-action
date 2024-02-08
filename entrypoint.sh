@@ -28,9 +28,6 @@ else
     buildkitd="--addr tcp://127.0.0.1:8888"
 fi
 
-# JUST FOR TESTING CHANGE THIS
-buildkitd="--addr buildx://copa-action"
-
 # run copa to patch image
 if copa patch -i "$image" -r ./data/"$report" -t "$patched_tag" $buildkitd --timeout $timeout $output --debug;
 then
