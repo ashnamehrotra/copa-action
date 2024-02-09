@@ -63,6 +63,11 @@ jobs:
           echo "$socket_path"
           echo "SOCKET=$socket_path" >> $GITHUB_ENV
 
+      - name: Debugging
+        run: |
+          docker context ls
+          docker context inspect
+
         # copa action will only run if there are vulnerabilities
       - name: Run Copa action
         if: steps.vuln_count.outputs.vuln_count != '0'
