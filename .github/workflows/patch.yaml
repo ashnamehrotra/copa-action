@@ -67,6 +67,7 @@ jobs:
         run: |
           docker context ls
           docker context inspect
+          docker context use setup-docker-action
 
         # copa action will only run if there are vulnerabilities
       - name: Run Copa action
