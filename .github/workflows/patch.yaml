@@ -63,13 +63,6 @@ jobs:
           echo "$socket_path"
           echo "SOCKET=$socket_path" >> $GITHUB_ENV
 
-      - name: Debugging
-        run: |
-          docker context ls
-          docker context inspect
-          echo "$DOCKER_HOST"
-          docker context use setup-docker-action
-
         # copa action will only run if there are vulnerabilities
       - name: Run Copa action
         if: steps.vuln_count.outputs.vuln_count != '0'
@@ -102,6 +95,7 @@ jobs:
         run: |
           docker context ls
           docker -c "default" images
+          docker -c "setup-docker-action" images
           # retag if needed
-          docker  -c "setup-docker-action" tag ${{ steps.copa.outputs.patched-image }} ghcr.io/ashnamehrotra/copa-action/test/${{ steps.copa.outputs.patched-image }}
-          docker  -c "setup-docker-action" push ghcr.io/ashnamehrotra/copa-action/test/${{ steps.copa.outputs.patched-image }}
+          docker tag ${{ steps.copa.outputs.patched-image }} ghcr.io/ashnamehrotra/copa-action/test/${{ steps.copa.outputs.patched-image }}
+          docker push ghcr.io/ashnamehrotra/copa-action/test/${{ steps.copa.outputs.patched-image }}
