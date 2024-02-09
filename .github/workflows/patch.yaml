@@ -56,7 +56,7 @@ jobs:
           image: ${{ matrix.images }}
           image-report: "report.json"
           patched-tag: "patched"
-          # buildkit-version: "v0.12.4" # optional, default is latest
+          buildkit-version: "v0.12.4" # optional, default is latest
           # copa-version: "0.6.0" # optional, default is latest
 
         # see https://github.com/docker/login-action#usage for other registries
