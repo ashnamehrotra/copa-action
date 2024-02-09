@@ -43,6 +43,26 @@ jobs:
           vuln_count=$(jq 'if .Results then [.Results[] | select(.Class=="os-pkgs" and .Vulnerabilities!=null) | .Vulnerabilities[]] | length else 0 end' "$report_file")
           echo "vuln_count=$vuln_count" >> $GITHUB_OUTPUT
 
+      - name: Set up Docker if buildkitd not provided
+        uses: crazy-max/ghaction-setup-docker@v3
+        with:
+          daemon-config: |
+            {
+              "debug": true,
+              "experimental": true,
+                "features": {
+                  "containerd-snapshotter": true
+                }
+            }
+      - name: Get socket path
+        if: ${{ !inputs.buildkitd }}
+        shell: bash
+        run: |
+          url=$(docker context inspect | jq -r .[0].Endpoints.docker.Host)
+          socket_path=$(echo "$url" | awk -F// '{print $2}')
+          echo "$socket_path"
+          echo "SOCKET=$socket_path" >> $GITHUB_ENV
+
         # copa action will only run if there are vulnerabilities
       - name: Run Copa action
         if: steps.vuln_count.outputs.vuln_count != '0'
@@ -56,7 +76,8 @@ jobs:
           image: ${{ matrix.images }}
           image-report: "report.json"
           patched-tag: "patched"
-          buildkit-version: "v0.12.4" # optional, default is latest
+          custom-socket: "$SOCKET"
+          # buildkit-version: "v0.12.4" # optional, default is latest
           # copa-version: "0.6.0" # optional, default is latest
 
         # see https://github.com/docker/login-action#usage for other registries
