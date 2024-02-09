@@ -97,5 +97,5 @@ jobs:
           docker -c "default" images
           docker -c "setup-docker-action" images
           # retag if needed
-          docker tag ${{ steps.copa.outputs.patched-image }} ghcr.io/ashnamehrotra/copa-action/test/${{ steps.copa.outputs.patched-image }}
-          docker push ghcr.io/ashnamehrotra/copa-action/test/${{ steps.copa.outputs.patched-image }}
+          docker -c "default" tag ${{ steps.copa.outputs.patched-image }} ghcr.io/ashnamehrotra/copa-action/test/${{ steps.copa.outputs.patched-image }}
+          docker -c "default" push ghcr.io/ashnamehrotra/copa-action/test/${{ steps.copa.outputs.patched-image }}
