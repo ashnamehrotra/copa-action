@@ -100,11 +100,8 @@ jobs:
       - name: Push patched image
         if: steps.login.conclusion == 'success'
         run: |
-          docker images
           docker context ls
-          export DOCKER_HOST="$(docker context inspect | jq -r .[0].Endpoints.docker.Host)"
-          docker images
-          docker context ls
+          docker images --context "setup-docker-action"
           # retag if needed
-          docker tag ${{ steps.copa.outputs.patched-image }} ghcr.io/ashnamehrotra/copa-action/test/${{ steps.copa.outputs.patched-image }}
-          docker push ghcr.io/ashnamehrotra/copa-action/test/${{ steps.copa.outputs.patched-image }}
+          docker tag ${{ steps.copa.outputs.patched-image }} ghcr.io/ashnamehrotra/copa-action/test/${{ steps.copa.outputs.patched-image }} --context "setup-docker-action"
+          docker push ghcr.io/ashnamehrotra/copa-action/test/${{ steps.copa.outputs.patched-image }} --context "setup-docker-action"
