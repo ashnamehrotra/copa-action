@@ -103,5 +103,5 @@ jobs:
           docker context ls
           docker -c "setup-docker-action" images
           # retag if needed
-          docker  -c "setup-docker-action tag ${{ steps.copa.outputs.patched-image }} ghcr.io/ashnamehrotra/copa-action/test/${{ steps.copa.outputs.patched-image }}
-          docker  -c "setup-docker-action push ghcr.io/ashnamehrotra/copa-action/test/${{ steps.copa.outputs.patched-image }}
+          docker  -c "setup-docker-action" tag ${{ steps.copa.outputs.patched-image }} ghcr.io/ashnamehrotra/copa-action/test/${{ steps.copa.outputs.patched-image }}
+          docker  -c "setup-docker-action" push ghcr.io/ashnamehrotra/copa-action/test/${{ steps.copa.outputs.patched-image }}
