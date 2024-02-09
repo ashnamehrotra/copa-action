@@ -100,7 +100,9 @@ jobs:
       - name: Push patched image
         if: steps.login.conclusion == 'success'
         run: |
-          export DOCKER_HOST="$SOCKET"
+          docker images
+          docker context ls
+          export DOCKER_HOST="$(docker context inspect | jq -r .[0].Endpoints.docker.Host)"
           docker images
           docker context ls
           # retag if needed
