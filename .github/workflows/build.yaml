@@ -56,6 +56,7 @@ jobs:
           bats --print-output-on-failure ./test/test.bats
       
       - name: Bats Test - Buildkit Container
+        run: |
           docker run --net=host --detach --rm --privileged -p 127.0.0.1:8888:8888 --name buildkitd --entrypoint buildkitd moby/buildkit:v${{ env.BUILDKIT_VERSION }} --addr tcp://0.0.0.0:8888
           docker run --net=host \
             --mount=type=bind,source=/tmp,target=/data \
