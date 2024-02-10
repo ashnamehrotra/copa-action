@@ -66,16 +66,17 @@ jobs:
           bats --print-output-on-failure ./test/test.bats
 
       - name: Set up Docker
-          uses: crazy-max/ghaction-setup-docker@v3
-          with:
-          daemon-config: |
-              {
-              "debug": true,
-              "experimental": true,
-                  "features": {
-                  "containerd-snapshotter": true
-                  }
-              }
+        uses: crazy-max/ghaction-setup-docker@v3
+        with:
+        daemon-config: |
+            {
+            "debug": true,
+            "experimental": true,
+                "features": {
+                "containerd-snapshotter": true
+                }
+            }
+            
       - name: Get socket path
           run: |
               url=$(docker context inspect | jq -r .[0].Endpoints.docker.Host)
