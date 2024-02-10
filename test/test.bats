@@ -2,6 +2,10 @@
 
 load helpers
 
+teardown_file() {
+    docker rmi docker.io/library/nginx:1.21.6-patched
+}
+
 @test "Check patched image exists" {
     docker images
     id=$(docker images --quiet 'nginx:1.21.6-patched')
