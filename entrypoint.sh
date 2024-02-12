@@ -10,6 +10,14 @@ output_file=$5
 format=$6
 connection_format=$7
 
+echo "image $image"
+echo "report $report"
+echo "patched tag $patched_tag"
+echo "timeout $timeout"
+echo "output file $output_file"
+echo "format $format"
+echo "connnection format $connection_format"
+
 
 # parse image into image name
 image_no_tag=$(echo "$image" | cut -d':' -f1)
