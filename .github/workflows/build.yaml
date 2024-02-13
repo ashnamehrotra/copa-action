@@ -30,7 +30,7 @@ jobs:
 
       - name: Generate trivy vuln report for nginx image
         run: |
-          trivy image --vuln-type os --ignore-unfixed -f json -o /tmp/opa:0.46.0.json docker.io/openpolicyagent/opa:0.46.0
+          trivy image --vuln-type os --ignore-unfixed -f json -o /tmp/opa.0.46.0.json docker.io/openpolicyagent/opa:0.46.0
 
       - name: Get latest copa version
         run: |
