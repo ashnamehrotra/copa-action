@@ -9,6 +9,10 @@ jobs:
   build:
     name: build
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        test-type: ["buildx", "buildkit-container", "custom-socket"]
+
     steps:
       - name: Setup BATS
         uses: mig4/setup-bats@af9a00deb21b5d795cabfeaa8d9060410377686d # v1.2.0
@@ -45,28 +49,8 @@ jobs:
         run: |
           docker build --build-arg copa_version=${COPA_VERSION} -t copa-action .
 
-      - name: Bats Test - Buildx
-        run: |
-          docker run --net=host \
-            --mount=type=bind,source=/tmp,target=/data \
-            --mount=type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock \
-            --mount=type=bind,source=$GITHUB_OUTPUT,target=$GITHUB_OUTPUT -e GITHUB_OUTPUT \
-            --name=copa-action-buildx \
-            copa-action 'docker.io/library/nginx:1.21.6' 'nginx.1.21.6.json' '1.21.6-patched' '20m' 'buildx'
-          bats --print-output-on-failure ./test/test.bats
-
-      - name: Bats Test - Buildkit Container
-        run: |
-          docker run --net=host --detach --rm --privileged -p 127.0.0.1:8888:8888 --name buildkitd --entrypoint buildkitd moby/buildkit:v${{ env.BUILDKIT_VERSION }} --addr tcp://0.0.0.0:8888
-          docker run --net=host \
-            --mount=type=bind,source=/tmp,target=/data \
-            --mount=type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock \
-            --mount=type=bind,source=$GITHUB_OUTPUT,target=$GITHUB_OUTPUT -e GITHUB_OUTPUT \
-            --name=copa-action-buildkit \
-            copa-action 'docker.io/library/nginx:1.21.6' 'nginx.1.21.6.json' '1.21.6-patched' '20m' 'buildkit-container' 
-          bats --print-output-on-failure ./test/test.bats
-
       - name: Set up Docker
+        if: matrix.test-type == 'custom-socket'
         uses: crazy-max/ghaction-setup-docker@v3
         with:
           daemon-config: |
@@ -77,20 +61,27 @@ jobs:
                   "containerd-snapshotter": true
                   }
               }
-
+  
       - name: Get socket path
+        if: matrix.test-type == 'custom-socket'
         run: |
             url=$(docker context inspect | jq -r .[0].Endpoints.docker.Host)
             socket_path=$(echo "$url" | awk -F// '{print $2}')
             echo "$socket_path"
             echo "SOCKET=$socket_path" >> $GITHUB_ENV
 
-      - name: Bats Test - Custom Socket
+
+      - name: Run Buildkit Container
+        if: matrix.test-type == 'buildkit-container'
+        run: |
+          docker run --net=host --detach --rm --privileged -p 127.0.0.1:8888:8888 --name buildkitd --entrypoint buildkitd moby/buildkit:v${{ env.BUILDKIT_VERSION }} --addr tcp://0.0.0.0:8888
+
+      - name: Bats Test
         run: |
           docker run --net=host \
             --mount=type=bind,source=/tmp,target=/data \
-            --mount=type=bind,source="$SOCKET",target=/var/run/docker.sock \
+            --mount=type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock \
             --mount=type=bind,source=$GITHUB_OUTPUT,target=$GITHUB_OUTPUT -e GITHUB_OUTPUT \
-            --name=copa-action-custom-socket \
-            copa-action 'docker.io/library/nginx:1.21.6' 'nginx.1.21.6.json' '1.21.6-patched' '20m' 'custom-socket' 
+            --name=copa-action \
+            copa-action 'docker.io/library/nginx:1.21.6' 'nginx.1.21.6.json' '1.21.6-patched' '20m' "${{ matrix.test-type }}"
           bats --print-output-on-failure ./test/test.bats
