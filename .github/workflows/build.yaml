@@ -41,7 +41,7 @@ jobs:
 
       - name: Install Copa
         run: |
-            curl --retry 5 -fsSL -o copa.tar.gz https://github.com/project-copacetic/copacetic/releases/download/v${COPA_VERSION}/copa_${COPA_VERSION}_linux_amd64.tar.gz
+            curl --retry 5 -fsSL -o copa.tar.gz https://github.com/project-copacetic/copacetic/releases/download/v$COPA_VERSION/copa_$COPA_VERSION_linux_amd64.tar.gz
             tar -zxvf copa.tar.gz
             cp copa /usr/local/bin/
 
@@ -54,13 +54,13 @@ jobs:
         uses: crazy-max/ghaction-setup-docker@v3
         with:
           daemon-config: |
-              {
-              "debug": true,
-              "experimental": true,
-                  "features": {
-                  "containerd-snapshotter": true
-                  }
-              }
+            {
+            "debug": true,
+            "experimental": true,
+                "features": {
+                "containerd-snapshotter": true
+                }
+            }
   
       - name: Get socket path
         if: matrix.test-type == 'custom-socket'
