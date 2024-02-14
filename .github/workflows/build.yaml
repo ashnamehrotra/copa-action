@@ -73,7 +73,7 @@ jobs:
           fi
 
           docker build --build-arg copa_version=${COPA_VERSION} -t copa-action .
-          docker --context default run --net=host \
+          docker run --net=host \
             --mount=type=bind,source=/tmp,target=/data \
             --mount=type=bind,source="$SOCKET",target=/var/run/docker.sock \
             --mount=type=bind,source=$GITHUB_OUTPUT,target=$GITHUB_OUTPUT -e GITHUB_OUTPUT \
