@@ -15,8 +15,7 @@ load helpers
 }
 
 @test "Run trivy on patched image" {
-    docker context use "setup-docker-action"
-    run TRIVY_NON_SSL=1 trivy image --exit-code 1 --vuln-type os --ignore-unfixed -f json -o opa.0.46.0-patched.json 'docker.io/openpolicyagent/opa:0.46.0-patched'
+    run DOCKER_HOST="%1" trivy image --exit-code 1 --vuln-type os --ignore-unfixed -f json -o opa.0.46.0-patched.json 'docker.io/openpolicyagent/opa:0.46.0-patched'
     [ "$status" -eq 0 ]
     vulns=$(jq 'if .Results then [.Results[] | select(.Class=="os-pkgs" and .Vulnerabilities!=null) | .Vulnerabilities[]] | length else 0 end' opa.0.46.0-patched.json)
     assert_equal "$vulns" "0"
