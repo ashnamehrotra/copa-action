@@ -69,8 +69,8 @@ jobs:
           docker run --net=host --detach --rm --privileged -p 127.0.0.1:8888:8888 --name buildkitd --entrypoint buildkitd moby/buildkit:v${{ env.BUILDKIT_VERSION }} --addr tcp://0.0.0.0:8888
 
       - name: Bats Test
-        shell: bash -eux
         run: |
+          set -x
           socket="/var/run/docker.sock"
 
           if [ "${{ matrix.test-type }}" = "custom-socket" ]; then
