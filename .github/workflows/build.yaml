@@ -27,13 +27,15 @@ jobs:
           tar -zxvf trivy.tar.gz
           cp trivy /usr/local/bin/
 
-      - name: Install crictl
+      - name: Download ctr binary
         run: |
-          VERSION="v1.28.0"
-          wget https://github.com/kubernetes-sigs/cri-tools/releases/download/$VERSION/crictl-$VERSION-linux-amd64.tar.gz
-          sudo tar zxvf crictl-$VERSION-linux-amd64.tar.gz -C /usr/local/bin
-          rm -f crictl-$VERSION-linux-amd64.tar.gz
-
+          CTR_VERSION="v1.5.0"  # Replace with the desired version
+          CTR_DOWNLOAD_URL="https://github.com/containerd/containerd/releases/download/${CTR_VERSION}/ctr-${CTR_VERSION}-linux-amd64"
+          
+          mkdir -p ~/.local/bin
+          curl -L -o ~/.local/bin/ctr ${CTR_DOWNLOAD_URL}
+          chmod +x ~/.local/bin/ctr
+  
       - name: Generate trivy vuln report for opa image
         run: |
           trivy image --vuln-type os --ignore-unfixed -f json -o /tmp/opa.0.46.0.json docker.io/openpolicyagent/opa:0.46.0
@@ -88,8 +90,6 @@ jobs:
             copa-action 'docker.io/openpolicyagent/opa:0.46.0' 'opa.0.46.0.json' '0.46.0-patched' '10m' "${{ matrix.test-type }}" 'openvex' 'output.json'
 
           docker context ls
-
-          CONTAINER_RUNTIME_ENDPOINT=unix://$SOCKET crictl images
 
           ctr image load docker.io/openpolicyagent/opa:0.46.0-patched
 
