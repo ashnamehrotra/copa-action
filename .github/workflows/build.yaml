@@ -79,6 +79,7 @@ jobs:
 
       - name: Bats Test
         run: |
+          echo  "${{ matrix.test-type }}"
           docker --context default run --net=host \
             --mount=type=bind,source=/tmp,target=/data \
             --mount=type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock \
