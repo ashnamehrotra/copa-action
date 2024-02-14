@@ -75,7 +75,7 @@ jobs:
           if ["${{ matrix.test-type }}" == "custom-sock"]; then
             url=$(docker context inspect | jq -r .[0].Endpoints.docker.Host)
             socket=$(echo "$url" | awk -F// '{print $2}')
-          fin
+          fi
 
           docker --context default run --net=host \
             --mount=type=bind,source=/tmp,target=/data \
