@@ -89,9 +89,7 @@ jobs:
 
           docker context ls
 
-          crictl
-
-          crictl images --runtime-endpoint $SOCKET
+          crictl --runtime-endpoint $SOCKET images
 
           ctr image load docker.io/openpolicyagent/opa:0.46.0-patched
 
