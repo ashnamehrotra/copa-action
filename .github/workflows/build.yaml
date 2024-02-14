@@ -38,11 +38,11 @@ jobs:
           latest_tag=$(curl --retry 5 -s "https://api.github.com/repos/project-copacetic/copacetic/releases/latest" | jq -r '.tag_name')
           version=${latest_tag:1}
           echo "Copa version: $version"
-          echo "$copa-version=$version" >> $GITHUB_OUTPUT
+          echo "$COPA_VERSION=$version" >> $GITHUB_OUTPUT
 
       - name: Install Copa
         run: |
-          curl --retry 5 -fsSL -o copa.tar.gz https://github.com/project-copacetic/copacetic/releases/download/v${{ steps.copa-version.outputs.copa-version }}/copa_$${{ steps.copa-version.outputs.copa-version }}_linux_amd64.tar.gz
+          curl --retry 5 -fsSL -o copa.tar.gz https://github.com/project-copacetic/copacetic/releases/download/v${{ steps.copa-version.outputs.COPA_VERSION }}/copa_${{ steps.copa-version.outputs.COPA_VERSION }}_linux_amd64.tar.gz
           tar -zxvf copa.tar.gz
           cp copa /usr/local/bin/
 
