@@ -93,8 +93,9 @@ jobs:
         if: steps.login.conclusion == 'success'
         run: |
           set -ex
+          docker -c "default" images
           docker images
-          docket context ls
+          docker context ls
           # retag if needed
-          docker tag ${{ steps.copa.outputs.patched-image }} ghcr.io/ashnamehrotra/copa-action/test/${{ steps.copa.outputs.patched-image }}
-          docker push ghcr.io/ashnamehrotra/copa-action/test/${{ steps.copa.outputs.patched-image }}
+          docker -c "default" tag ${{ steps.copa.outputs.patched-image }} ghcr.io/ashnamehrotra/copa-action/test/${{ steps.copa.outputs.patched-image }}
+          docker -c "default" push ghcr.io/ashnamehrotra/copa-action/test/${{ steps.copa.outputs.patched-image }}
