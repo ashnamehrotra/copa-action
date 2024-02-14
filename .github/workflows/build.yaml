@@ -27,6 +27,13 @@ jobs:
           tar -zxvf trivy.tar.gz
           cp trivy /usr/local/bin/
 
+      - name: Install crictl
+        run: |
+          VERSION="v1.28.0"
+          wget https://github.com/kubernetes-sigs/cri-tools/releases/download/$VERSION/crictl-$VERSION-linux-amd64.tar.gz
+          sudo tar zxvf crictl-$VERSION-linux-amd64.tar.gz -C /usr/local/bin
+          rm -f crictl-$VERSION-linux-amd64.tar.gz
+
       - name: Generate trivy vuln report for opa image
         run: |
           trivy image --vuln-type os --ignore-unfixed -f json -o /tmp/opa.0.46.0.json docker.io/openpolicyagent/opa:0.46.0
@@ -79,5 +86,15 @@ jobs:
             --mount=type=bind,source=$GITHUB_OUTPUT,target=$GITHUB_OUTPUT -e GITHUB_OUTPUT \
             --name=copa-action \
             copa-action 'docker.io/openpolicyagent/opa:0.46.0' 'opa.0.46.0.json' '0.46.0-patched' '10m' "${{ matrix.test-type }}" 'openvex' 'output.json'
+
+          docker context ls
+
+          crictl
+
+          crictl images --runtime-endpoint $SOCKET
+
+          ctr image load docker.io/openpolicyagent/opa:0.46.0-patched
+
+          docker images
 
           SOCKET=$SOCKET bats --print-output-on-failure ./test/test.bats
