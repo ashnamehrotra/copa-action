@@ -26,15 +26,6 @@ jobs:
           curl -fsSL -o trivy.tar.gz https://github.com/aquasecurity/trivy/releases/download/v${{ env.TRIVY_VERSION }}/trivy_${{ env.TRIVY_VERSION }}_Linux-64bit.tar.gz
           tar -zxvf trivy.tar.gz
           cp trivy /usr/local/bin/
-
-      - name: Download ctr binary
-        run: |
-          CTR_VERSION="v1.5.0"  # Replace with the desired version
-          CTR_DOWNLOAD_URL="https://github.com/containerd/containerd/releases/download/${CTR_VERSION}/ctr-${CTR_VERSION}-linux-amd64"
-          
-          mkdir -p ~/.local/bin
-          curl -L -o ~/.local/bin/ctr ${CTR_DOWNLOAD_URL}
-          chmod +x ~/.local/bin/ctr
   
       - name: Generate trivy vuln report for opa image
         run: |
@@ -90,14 +81,7 @@ jobs:
             copa-action 'docker.io/openpolicyagent/opa:0.46.0' 'opa.0.46.0.json' '0.46.0-patched' '10m' "${{ matrix.test-type }}" 'openvex' 'output.json'
 
           docker context ls
-
-          ctr version
-
-          ctr --help
-
-
-          ctr image load docker.io/openpolicyagent/opa:0.46.0-patched
-
           docker images
+          docker save -o patched.tag openpolicyagent/opa:0.46.0
 
           SOCKET=$SOCKET bats --print-output-on-failure ./test/test.bats
