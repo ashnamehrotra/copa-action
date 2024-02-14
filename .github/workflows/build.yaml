@@ -82,4 +82,8 @@ jobs:
           
           docker images
 
+          echo "$DOCKER_DRIVER"
+          echo "$DOCKER_HOST"
+          echo "$DOCKER_TLS_CERTDIR"
+
           bats --print-output-on-failure ./test/test.bats
