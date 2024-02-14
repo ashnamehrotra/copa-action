@@ -92,6 +92,7 @@ jobs:
       - name: Push patched image
         if: steps.login.conclusion == 'success'
         run: |
+          set -ex
           docker images
           docket context ls
           # retag if needed
