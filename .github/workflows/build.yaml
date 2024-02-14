@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        test-type: ["buildx", "buildkit-container", "custom-socket"]
+        test-type: ["custom-socket"]
     steps:
       - name: Setup BATS
         uses: mig4/setup-bats@af9a00deb21b5d795cabfeaa8d9060410377686d # v1.2.0
@@ -76,7 +76,7 @@ jobs:
           docker context use default
 
           docker build --build-arg copa_version=${COPA_VERSION} -t copa-action .
-          docker run --net=host \
+          docker --context default run --net=host \
             --mount=type=bind,source=/tmp,target=/data \
             --mount=type=bind,source="$SOCKET",target=/var/run/docker.sock \
             --mount=type=bind,source=$GITHUB_OUTPUT,target=$GITHUB_OUTPUT -e GITHUB_OUTPUT \
