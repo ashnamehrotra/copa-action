@@ -72,9 +72,6 @@ jobs:
             SOCKET=$(echo "$url" | awk -F// '{print $2}')
           fi
 
-          docker images
-          docker context use default
-
           docker build --build-arg copa_version=${COPA_VERSION} -t copa-action .
           docker --context default run --net=host \
             --mount=type=bind,source=/tmp,target=/data \
