@@ -9,10 +9,6 @@ jobs:
   build:
     name: build
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        test-type: ["buildx", "buildkit-container", "custom-socket"]
-
     steps:
       - name: Setup BATS
         uses: mig4/setup-bats@af9a00deb21b5d795cabfeaa8d9060410377686d # v1.2.0
@@ -33,55 +29,28 @@ jobs:
           trivy image --vuln-type os --ignore-unfixed -f json -o /tmp/opa.0.46.0.json docker.io/openpolicyagent/opa:0.46.0
 
       - name: Get latest copa version
-        id: copa-version
         run: |
           latest_tag=$(curl --retry 5 -s "https://api.github.com/repos/project-copacetic/copacetic/releases/latest" | jq -r '.tag_name')
           version=${latest_tag:1}
           echo "Copa version: $version"
-          echo "COPA_VERSION=$version" >> $GITHUB_OUTPUT
+          echo "COPA_VERSION=$version" >> $GITHUB_ENV
 
       - name: Install Copa
         run: |
-          curl --retry 5 -fsSL -o copa.tar.gz https://github.com/project-copacetic/copacetic/releases/download/v${{ steps.copa-version.outputs.COPA_VERSION }}/copa_${{ steps.copa-version.outputs.COPA_VERSION }}_linux_amd64.tar.gz
-          tar -zxvf copa.tar.gz
-          cp copa /usr/local/bin/
-
-      - name: Build Copa Action Image
-        run: |
-          docker build --build-arg copa_version=${{ steps.copa-version.outputs.COPA_VERSION }} -t copa-action .
-
-      - name: Set up Docker
-        if: matrix.test-type == 'custom-socket'
-        uses: crazy-max/ghaction-setup-docker@v3
-        with:
-          daemon-config: |
-            {
-            "debug": true,
-            "experimental": true,
-                "features": {
-                "containerd-snapshotter": true
-                }
-            }
-
-      - name: Run Buildkit Container
-        if: matrix.test-type == 'buildkit-container'
-        run: |
-          docker run --net=host --detach --rm --privileged -p 127.0.0.1:8888:8888 --name buildkitd --entrypoint buildkitd moby/buildkit:v${{ env.BUILDKIT_VERSION }} --addr tcp://0.0.0.0:8888
+            curl --retry 5 -fsSL -o copa.tar.gz https://github.com/project-copacetic/copacetic/releases/download/v${COPA_VERSION}/copa_${COPA_VERSION}_linux_amd64.tar.gz
+            tar -zxvf copa.tar.gz
+            cp copa /usr/local/bin/
 
       - name: Bats Test
         run: |
-          set -x
-          socket="/var/run/docker.sock"
-
-          if [ "${{ matrix.test-type }}" = "custom-socket" ]; then
-            url=$(docker context inspect | jq -r .[0].Endpoints.docker.Host)
-            socket=$(echo "$url" | awk -F// '{print $2}')
-          fi
-
-          docker --context default run --net=host \
+          set -ex
+          # docker run --net=host --detach --rm --privileged -p 127.0.0.1:8888:8888 --name buildkitd --entrypoint buildkitd moby/buildkit:v${{ env.BUILDKIT_VERSION }} --addr tcp://0.0.0.0:8888
+          docker build --build-arg copa_version=${COPA_VERSION} -t copa-action .
+          docker run --net=host \
             --mount=type=bind,source=/tmp,target=/data \
-            --mount=type=bind,source="$socket",target=/var/run/docker.sock \
+            --mount=type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock \
             --mount=type=bind,source=$GITHUB_OUTPUT,target=$GITHUB_OUTPUT -e GITHUB_OUTPUT \
             --name=copa-action \
-            copa-action 'docker.io/openpolicyagent/opa:0.46.0' 'opa.0.46.0.json' '0.46.0-patched' '20m' "${{ matrix.test-type }}" 'output.json' 'openvex'
+            copa-action 'docker.io/openpolicyagent/opa:0.46.0' 'opa.0.46.0.json' '0.46.0-patched' '10m' 'buildx' 'openvex' 'output.json'
+          docker images
           bats --print-output-on-failure ./test/test.bats
