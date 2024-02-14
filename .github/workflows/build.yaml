@@ -62,15 +62,6 @@ jobs:
                 "containerd-snapshotter": true
                 }
             }
-  
-      - name: Get socket path
-        if: matrix.test-type == 'custom-socket'
-        run: |
-            url=$(docker context inspect | jq -r .[0].Endpoints.docker.Host)
-            socket_path=$(echo "$url" | awk -F// '{print $2}')
-            echo "$socket_path"
-            echo "SOCKET=$socket_path" >> $GITHUB_ENV
-
 
       - name: Run Buildkit Container
         if: matrix.test-type == 'buildkit-container'
@@ -79,10 +70,16 @@ jobs:
 
       - name: Bats Test
         run: |
-          echo  "${{ matrix.test-type }}"
+          socket="/var/run/docker.sock"
+
+          if "${{ matrix.test-type }}" == "custom-sock"; then
+            url=$(docker context inspect | jq -r .[0].Endpoints.docker.Host)
+            socket=$(echo "$url" | awk -F// '{print $2}')
+          fin
+
           docker --context default run --net=host \
             --mount=type=bind,source=/tmp,target=/data \
-            --mount=type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock \
+            --mount=type=bind,source=$socket,target=/var/run/docker.sock \
             --mount=type=bind,source=$GITHUB_OUTPUT,target=$GITHUB_OUTPUT -e GITHUB_OUTPUT \
             --name=copa-action \
             copa-action 'docker.io/openpolicyagent/opa:0.46.0' 'opa.0.46.0.json' '0.46.0-patched' '20m' "${{ matrix.test-type }}" 'output.json' 'openvex'
