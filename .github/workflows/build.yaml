@@ -91,6 +91,11 @@ jobs:
 
           docker context ls
 
+          ctr version
+
+          ctr --help
+
+
           ctr image load docker.io/openpolicyagent/opa:0.46.0-patched
 
           docker images
