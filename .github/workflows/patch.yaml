@@ -92,6 +92,8 @@ jobs:
       - name: Push patched image
         if: steps.login.conclusion == 'success'
         run: |
+          docker images
+          docket context ls
           # retag if needed
           docker tag ${{ steps.copa.outputs.patched-image }} ghcr.io/ashnamehrotra/copa-action/test/${{ steps.copa.outputs.patched-image }}
           docker push ghcr.io/ashnamehrotra/copa-action/test/${{ steps.copa.outputs.patched-image }}
