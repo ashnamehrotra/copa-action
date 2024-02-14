@@ -42,13 +42,13 @@ jobs:
 
       - name: Install Copa
         run: |
-          curl --retry 5 -fsSL -o copa.tar.gz https://github.com/project-copacetic/copacetic/releases/download/v"${{ steps.copa-version.outputs.copa-version }}"/copa_$version_linux_amd64.tar.gz
+          curl --retry 5 -fsSL -o copa.tar.gz https://github.com/project-copacetic/copacetic/releases/download/v${{ steps.copa-version.outputs.copa-version }}/copa_$version_linux_amd64.tar.gz
           tar -zxvf copa.tar.gz
           cp copa /usr/local/bin/
 
       - name: Build Copa Action Image
         run: |
-          docker build --build-arg copa_version="${{ steps.copa-version.outputs.copa-version }}" -t copa-action .
+          docker build --build-arg copa_version=${{ steps.copa-version.outputs.copa-version }} -t copa-action .
 
       - name: Set up Docker
         if: matrix.test-type == 'custom-socket'
