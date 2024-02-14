@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        test-type: ["buildx", "buildkit-container"]
+        test-type: ["buildx", "buildkit-container", "custom-socket"]
     steps:
       - name: Setup BATS
         uses: mig4/setup-bats@af9a00deb21b5d795cabfeaa8d9060410377686d # v1.2.0
@@ -49,9 +49,29 @@ jobs:
         run : |
           docker run --net=host --detach --rm --privileged -p 127.0.0.1:8888:8888 --name buildkitd --entrypoint buildkitd moby/buildkit:v${{ env.BUILDKIT_VERSION }} --addr tcp://0.0.0.0:8888
 
+      - name: Set up Docker
+        if: matrix.test-type == 'custom-socket'
+        uses: crazy-max/ghaction-setup-docker@v3
+        with:
+          daemon-config: |
+            {
+            "debug": true,
+            "experimental": true,
+                "features": {
+                "containerd-snapshotter": true
+                }
+            }
+
       - name: Bats Test
         run: |
           set -ex
+          socket="/var/run/docker.sock"
+
+          if [ "${{ matrix.test-type }}" = "custom-socket" ]; then
+            url=$(docker context inspect | jq -r .[0].Endpoints.docker.Host)
+            socket=$(echo "$url" | awk -F// '{print $2}')
+          fi
+
           docker build --build-arg copa_version=${COPA_VERSION} -t copa-action .
           docker run --net=host \
             --mount=type=bind,source=/tmp,target=/data \
