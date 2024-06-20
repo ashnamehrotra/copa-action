@@ -1,0 +1,163 @@
+{
+  "SchemaVersion": 2,
+  "ArtifactName": "test-local",
+  "ArtifactType": "container_image",
+  "Metadata": {
+    "OS": {
+      "Family": "alpine",
+      "Name": "3.7.3",
+      "EOSL": true
+    },
+    "ImageID": "sha256:7d2fe8106101b2313c4916dcc34b167cee597a18a9e849fe20fab8a938b55377",
+    "DiffIDs": [
+      "sha256:45f829e2d5adc8ba6fb6701de9036fc207ad8b3929fc605a7b5e2d6b70cfc869"
+    ],
+    "RepoTags": [
+      "test-local:latest"
+    ],
+    "RepoDigests": [
+      "test-local@sha256:7d2fe8106101b2313c4916dcc34b167cee597a18a9e849fe20fab8a938b55377"
+    ],
+    "ImageConfig": {
+      "architecture": "arm64",
+      "created": "2019-06-19T20:40:05.684683678Z",
+      "docker_version": "26.1.4",
+      "history": [
+        {
+          "created": "2019-06-19T20:40:05Z",
+          "created_by": "/bin/sh -c #(nop) ADD file:593fdff46d6e2edf7fc03d568a8d8d4149ef13f8c2b1af554299a8d0d0e06e2f in / "
+        },
+        {
+          "created": "2019-06-19T20:40:05Z",
+          "created_by": "/bin/sh -c #(nop)  CMD [\"/bin/sh\"]",
+          "empty_layer": true
+        },
+        {
+          "created": "2019-06-19T20:40:05Z",
+          "created_by": "SHELL [/bin/bash -o pipefail -c]",
+          "comment": "buildkit.dockerfile.v0",
+          "empty_layer": true
+        }
+      ],
+      "os": "linux",
+      "rootfs": {
+        "type": "layers",
+        "diff_ids": [
+          "sha256:45f829e2d5adc8ba6fb6701de9036fc207ad8b3929fc605a7b5e2d6b70cfc869"
+        ]
+      },
+      "config": {
+        "Cmd": [
+          "/bin/sh"
+        ],
+        "Env": [
+          "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+        ],
+        "ArgsEscaped": true,
+        "Shell": [
+          "/bin/bash",
+          "-o",
+          "pipefail",
+          "-c"
+        ]
+      }
+    }
+  },
+  "Results": [
+    {
+      "Target": "test-local (alpine 3.7.3)",
+      "Class": "os-pkgs",
+      "Type": "alpine",
+      "Vulnerabilities": [
+        {
+          "VulnerabilityID": "CVE-2019-14697",
+          "PkgID": "musl@1.1.18-r3",
+          "PkgName": "musl",
+          "InstalledVersion": "1.1.18-r3",
+          "FixedVersion": "1.1.18-r4",
+          "Status": "fixed",
+          "Layer": {
+            "DiffID": "sha256:45f829e2d5adc8ba6fb6701de9036fc207ad8b3929fc605a7b5e2d6b70cfc869"
+          },
+          "SeveritySource": "nvd",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2019-14697",
+          "DataSource": {
+            "ID": "alpine",
+            "Name": "Alpine Secdb",
+            "URL": "https://secdb.alpinelinux.org/"
+          },
+          "Title": "musl libc through 1.1.23 has an x87 floating-point stack adjustment im ...",
+          "Description": "musl libc through 1.1.23 has an x87 floating-point stack adjustment imbalance, related to the math/i386/ directory. In some cases, use of this library could introduce out-of-bounds writes that are not present in an application's source code.",
+          "Severity": "CRITICAL",
+          "CweIDs": [
+            "CWE-787"
+          ],
+          "CVSS": {
+            "nvd": {
+              "V2Vector": "AV:N/AC:L/Au:N/C:P/I:P/A:P",
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+              "V2Score": 7.5,
+              "V3Score": 9.8
+            }
+          },
+          "References": [
+            "http://www.openwall.com/lists/oss-security/2019/08/06/4",
+            "https://git.musl-libc.org/cgit/musl/patch/?id=6818c31c9bc4bbad5357f1de14bedf781e5b349e",
+            "https://git.musl-libc.org/cgit/musl/patch/?id=f3ed8bfe8a82af1870ddc8696ed4cc1d5aa6b441",
+            "https://security.gentoo.org/glsa/202003-13",
+            "https://ubuntu.com/security/notices/USN-5990-1",
+            "https://www.cve.org/CVERecord?id=CVE-2019-14697",
+            "https://www.openwall.com/lists/musl/2019/08/06/1",
+            "https://www.openwall.com/lists/oss-security/2019/08/06/1"
+          ],
+          "PublishedDate": "2019-08-06T16:15:11.72Z",
+          "LastModifiedDate": "2023-03-03T17:43:22.227Z"
+        },
+        {
+          "VulnerabilityID": "CVE-2019-14697",
+          "PkgID": "musl-utils@1.1.18-r3",
+          "PkgName": "musl-utils",
+          "InstalledVersion": "1.1.18-r3",
+          "FixedVersion": "1.1.18-r4",
+          "Status": "fixed",
+          "Layer": {
+            "DiffID": "sha256:45f829e2d5adc8ba6fb6701de9036fc207ad8b3929fc605a7b5e2d6b70cfc869"
+          },
+          "SeveritySource": "nvd",
+          "PrimaryURL": "https://avd.aquasec.com/nvd/cve-2019-14697",
+          "DataSource": {
+            "ID": "alpine",
+            "Name": "Alpine Secdb",
+            "URL": "https://secdb.alpinelinux.org/"
+          },
+          "Title": "musl libc through 1.1.23 has an x87 floating-point stack adjustment im ...",
+          "Description": "musl libc through 1.1.23 has an x87 floating-point stack adjustment imbalance, related to the math/i386/ directory. In some cases, use of this library could introduce out-of-bounds writes that are not present in an application's source code.",
+          "Severity": "CRITICAL",
+          "CweIDs": [
+            "CWE-787"
+          ],
+          "CVSS": {
+            "nvd": {
+              "V2Vector": "AV:N/AC:L/Au:N/C:P/I:P/A:P",
+              "V3Vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+              "V2Score": 7.5,
+              "V3Score": 9.8
+            }
+          },
+          "References": [
+            "http://www.openwall.com/lists/oss-security/2019/08/06/4",
+            "https://git.musl-libc.org/cgit/musl/patch/?id=6818c31c9bc4bbad5357f1de14bedf781e5b349e",
+            "https://git.musl-libc.org/cgit/musl/patch/?id=f3ed8bfe8a82af1870ddc8696ed4cc1d5aa6b441",
+            "https://security.gentoo.org/glsa/202003-13",
+            "https://ubuntu.com/security/notices/USN-5990-1",
+            "https://www.cve.org/CVERecord?id=CVE-2019-14697",
+            "https://www.openwall.com/lists/musl/2019/08/06/1",
+            "https://www.openwall.com/lists/oss-security/2019/08/06/1"
+          ],
+          "PublishedDate": "2019-08-06T16:15:11.72Z",
+          "LastModifiedDate": "2023-03-03T17:43:22.227Z"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+name: test-local
+on:
+  workflow_dispatch:
+    inputs:
+      release_version:
+        description: 'Which version are we releasing? (format vX.Y.Z)'
+        required: false
+
+permissions:
+  contents: write
+
+jobs:
+    release:
+        name: "test-local"
+        runs-on: ubuntu-latest
+        steps:
+          - name: Checkout repo
+            uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+            with:
+              fetch-depth: 0 
+              
+          - name: Set up docker
+            uses: crazy-max/ghaction-setup-docker@v3
+            with:
+                version: latest
+                daemon-config: |
+                      {
+                          "experimental": true,
+                          "features" : {
+                              "containerd-snapshotter": true
+                          }
+                      }
+  
+          - name: Get socket path
+            run: |
+                url=$(docker context inspect | jq -r .[0].Endpoints.docker.Host)
+                socket_path=$(echo "$url" | awk -F// '{print $2}')
+                echo "$socket_path"
+                echo "SOCKET=$socket_path" >> $GITHUB_ENV
+
+          - name: Build image
+            id: build
+            uses: docker/build-push-action@v5
+            with:
+                file: .github/workflows/Dockerfile
+                load: true
+                push: false
+                tags: user/app:latest
+            
+          - name: Run Copa action
+            id: copa
+            uses: project-copacetic/copa-action@v1.2.1
+            with:
+                image: "user/app:latest"
+                image-report: report.json
+                patched-tag: "patched"
+                timeout: 5m
+                custom-socket: ${SOCKET}
