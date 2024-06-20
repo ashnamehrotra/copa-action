@@ -42,6 +42,16 @@ jobs:
             run: |
              docker pull nginx:1.21.6
              docker tag nginx:1.21.6 nginx:local
+
+          - name: Generate Trivy Report
+            uses: aquasecurity/trivy-action@d43c1f16c00cfd3978dde6c07f4bbcf9eb6993ca # 0.16.1
+            with:
+               scan-type: "image"
+               format: "json"
+               output: "report.json"
+               ignore-unfixed: true
+               vuln-type: "os"
+               image-ref: nginx:local
             
           - name: Run Copa action
             id: copa
