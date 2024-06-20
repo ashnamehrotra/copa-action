@@ -37,6 +37,7 @@ jobs:
                 socket_path=$(echo "$url" | awk -F// '{print $2}')
                 echo "$socket_path"
                 echo "SOCKET=$socket_path" >> $GITHUB_ENV
+                export CONTAINERD_ADDRESS=$socket_path
 
           - name: Create a local image
             run: |
