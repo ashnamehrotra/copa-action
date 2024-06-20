@@ -43,14 +43,16 @@ jobs:
              docker pull nginx:1.21.6
              docker tag nginx:1.21.6 nginx:local
 
-          - name: Install Trivy
-            run: |
-                echo "Downloading Latest Trivy Version"
-                curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b . latest
-
-                echo ${SOCKET}
-
-                ./trivy image --ignore-unfixed --vuln-type os -f json -o report.json --docker-host unix:///${SOCKET} nginx:local     
+          - name: Generate Trivy Report
+            uses: aquasecurity/trivy-action@0.23.0
+            with:
+               scan-type: "image"
+               format: "json"
+               output: "report.json"
+               ignore-unfixed: true
+               vuln-type: "os"
+               image-ref: nginx:local
+               docker-host: unix:///${SOCKET}
             
           - name: Run Copa action
             id: copa
