@@ -50,7 +50,7 @@ jobs:
 
                 echo ${SOCKET}
 
-                ./trivy image --ignore-unfixed --vuln-type os -f json -o report.json --docker-host ${SOCKET} nginx:local     
+                ./trivy image --ignore-unfixed --vuln-type os -f json -o report.json --docker-host unix:///${SOCKET} nginx:local     
             
           - name: Run Copa action
             id: copa
