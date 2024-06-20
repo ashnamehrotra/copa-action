@@ -48,8 +48,7 @@ jobs:
                 echo "Downloading Latest Trivy Version"
                 curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b . latest
 
-                export DOCKER_HOST=${SOCKET}
-                ./trivy image --ignore-unfixed --vuln-type os -f json -o report.json nginx:1.21.6               
+                ./trivy image --ignore-unfixed --vuln-type os -f json -o report.json --socket ${SOCKET} nginx:1.21.6         
 
           - name: Generate Trivy Report
             uses: aquasecurity/trivy-action@d43c1f16c00cfd3978dde6c07f4bbcf9eb6993ca # 0.16.1
