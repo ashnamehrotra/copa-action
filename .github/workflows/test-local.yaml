@@ -37,7 +37,7 @@ jobs:
                 socket_path=$(echo "$url" | awk -F// '{print $2}')
                 echo "$socket_path"
                 echo "SOCKET=$socket_path" >> $GITHUB_ENV
-                docker_host="unix:///$socket_path"
+                docker_host="unix://$socket_path"
                 echo "DOCKER_HOST=$docker_host" >> $GITHUB_ENV
                 echo ${DOCKER_HOST}
 
