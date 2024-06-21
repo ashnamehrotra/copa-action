@@ -57,7 +57,7 @@ jobs:
                ignore-unfixed: true
                vuln-type: "os"
                image-ref: "nginx:local"
-               docker-host: ${SOCKET}
+               docker-host: ${DOCKER_HOST}
             
           - name: Run Copa action
             id: copa
