@@ -38,6 +38,7 @@ jobs:
                 echo "$socket_path"
                 echo "SOCKET=$socket_path" >> $GITHUB_ENV
                 echo "DOCKER_HOST=unix:///$socket_path" >> $GITHUB_ENV
+                echo ${DOCKER_HOST}
 
           - name: Create a local image
             run: |
@@ -52,7 +53,7 @@ jobs:
                output: "report.json"
                ignore-unfixed: true
                vuln-type: "os"
-               image-ref: nginx:local
+               image-ref: "nginx:local"
                docker-host: ${DOCKER_HOST}
             
           - name: Run Copa action
