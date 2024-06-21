@@ -44,6 +44,8 @@ jobs:
           - name: Create a local image
             run: |
              docker pull nginx:1.21.6
+             echo "hi"
+             echo ${DOCKER_HOST}
              docker tag nginx:1.21.6 nginx:local
 
           - name: Generate Trivy Report
